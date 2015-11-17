@@ -306,7 +306,7 @@ CheckValid(Word,ForceLearn=false)
       {
          return
       }
-   } else if ( RegExMatch(Word, "S)[a-zA-Zà-öø-ÿÀ-ÖØ-ß]") = 0 )
+   } else if ( RegExMatch(Word, "S)[a-zA-ZÃ -Ã¶Ã¸-Ã¿Ã€-Ã–Ã˜-ÃŸ]") = 0 )
    {
       Return
    }
@@ -467,12 +467,34 @@ StrUnmark(string) {
    ; Remove combining marks and return result.
    string := RegExReplace(StrGet(&buf, len, "UTF-16"), "\pM")
    
-   StringReplace, string, string, æ, ae, All
-   StringReplace, string, string, Æ, AE, All
-   StringReplace, string, string, œ, oe, All
-   StringReplace, string, string, Œ, OE, All
-   StringReplace, string, string, ß, ss, All   
+   StringReplace, string, string, Ã¦, ae, All
+   StringReplace, string, string, Ã†, AE, All
+   StringReplace, string, string, Âœ, oe, All
+   StringReplace, string, string, ÂŒ, OE, All
+   StringReplace, string, string, ÃŸ, ss, All   
    
    return, string  
    
+}
+
+;------------------------------------------------------------------------
+
+BulkLearnFromClipboard(textblock)
+{
+   global g_TerminatingCharactersParsed
+   
+   ;Display progress bar window...
+   Progress, M, Please wait..., Bulk learning..., %g_ScriptTitle%
+    
+   Loop, Parse, textblock, %g_TerminatingCharactersParsed%`r`n%A_Tab%%A_Space%
+   {
+      ;Display words to show progress...
+      Progress, 50, Please wait..., %A_Index%: %A_LoopField%, %g_ScriptTitle%
+      AddWordToList(A_LoopField, 0,"ForceLearn")
+   }
+   
+   ;Turn off progress bar window...
+   Progress, Off
+   
+   return
 }
