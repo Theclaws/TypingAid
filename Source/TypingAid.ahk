@@ -1099,6 +1099,7 @@ BuildTrayMenu()
    Menu, Tray, NoStandard
    Menu, Tray, add, Settings, Configuration
    Menu, Tray, add, Pause, PauseResumeScript
+   Menu, Tray, add, Bulk Learn, BulkLearnFromClipboardMenu
    IF (A_IsCompiled)
    {
       Menu, Tray, add, Exit, ExitScript
@@ -1257,6 +1258,17 @@ if (g_PauseState == "Paused")
    Pause, On, 1
 }
 Return
+
+
+BulkLearnFromClipboardMenu:
+MsgBox, 4, Bulk-learn words from clipboard contents, Would you like to continue? (press Yes or No)
+IfMsgBox No
+{
+   Return
+}
+BulkLearnFromClipboard(clipboard)
+Return
+
 
 ExitScript:
 ExitApp
