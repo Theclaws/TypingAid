@@ -485,11 +485,20 @@ BulkLearnFromClipboard(textblock)
    
    ;Display progress bar window...
    Progress, M, Please wait..., Bulk learning..., %g_ScriptTitle%
-    
+
+   ;Count how many individual items there are, we need this number to display
+   ;an accurate progress bar.
+   Loop, Parse, textblock, %g_TerminatingCharactersParsed%`r`n%A_Tab%%A_Space%
+   {
+      ;Count the individual items
+      Counter++
+   }
+   
    Loop, Parse, textblock, %g_TerminatingCharactersParsed%`r`n%A_Tab%%A_Space%
    {
       ;Display words to show progress...
-      Progress, 50, Please wait..., %A_Index%: %A_LoopField%, %g_ScriptTitle%
+      ProgressPercent := Round(A_Index/Counter * 100)
+      Progress, %ProgressPercent%, Please wait..., %A_LoopField%, %g_ScriptTitle%
       AddWordToList(A_LoopField, 0,"ForceLearn")
    }
    
